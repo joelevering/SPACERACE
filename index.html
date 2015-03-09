@@ -1,0 +1,29 @@
+<html ng-app="spaceRace">
+<title>Village Crusher</title>
+<body ng-controller="gameController as gc">
+
+  <h1> Village Crusher </h1>
+
+  <button ng-click="gc.shootBullets(1)">Shoot a bullet!</button>
+  Enemy Village Health: {{gc.currentTargetHealth}}
+  <br><br>
+  Resources: {{gc.resources}}
+  <br>
+  Soldiers: {{gc.soldierCount}}
+  <br>
+  Bullets shot: {{gc.bulletCount}}
+  <br>
+  Villages destroyed: {{gc.villagesDestroyed}}
+
+  <div data="recruitSoldier" ng-show="gc.soldierCount > 0 || gc.resources >= 10">
+    <button ng-click="gc.recruitSoldier()" ng-disabled="gc.resources < 10">
+      Recruit a soldier! (10 resources)
+    </button>
+  </div>
+
+
+</body>
+</html>
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.js"></script>
+<script src="init.js"></script>
