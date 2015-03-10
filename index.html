@@ -7,13 +7,13 @@
   <button ng-click="gc.shootBullets(1)">Shoot a bullet!</button>
   {{gc.currentTarget.name}} Health: {{gc.currentTarget.health}}
   <br><br>
-  Resources: {{gc.resources}}
+  Resources: {{gameData.resources}}
   <br>
-  Soldiers: {{gc.soldierCount}}
+  Soldiers: {{gameData.soldierCount}}
   <br>
-  Bullets shot: {{gc.bulletCount}}
+  Bullets shot: {{gameData.bulletCount}}
   <br>
-  Villages destroyed: {{gc.villagesDestroyed}}
+  Villages destroyed: {{gameData.villagesDestroyed}}
 
   <div data="recruitSoldier" ng-show="gc.showSoldierButton()">
     <button ng-click="gc.recruitSoldier()" ng-disabled="gc.disableSoldierButton()">
@@ -25,4 +25,5 @@
 </html>
 
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular-cookies.js"></script>
 <script src="init.js"></script>

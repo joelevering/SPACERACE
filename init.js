@@ -1,37 +1,41 @@
-angular.module("spaceRace", [])
-  .controller("gameController", ['$interval', function gameController($interval){
+angular.module("spaceRace", ['ngCookies'])
+  .controller("gameController", ['$scope', '$interval', '$cookieStore', function gameController($scope, $interval, $cookieStore){
     var gc = this;
+    var versionNumber = 1
 
     var Enemy = function() {
       this.health = 10;
       this.name = "Enemy"
     };
 
-    gc.bulletCount = 0;
-    gc.soldierCount = 0;
-    gc.resources = 0;
+    $scope.gameData = {
+      bulletCount: 0,
+      soldierCount: 0,
+      resources: 0,
+      villagesDestroyed: 0
+    }
+
     gc.currentTarget = new Enemy();
 
-    gc.villagesDestroyed = 0;
 
 
     gc.shootBullets = function(numberOfBullets) {
-      gc.bulletCount += numberOfBullets;
+      $scope.gameData.bulletCount += numberOfBullets;
       gc.currentTarget.health -= numberOfBullets;
       handleAndCheckDeath();
     }
 
     gc.recruitSoldier = function() {
-      gc.soldierCount += 1;
-      gc.resources -= 10;
+      $scope.gameData.soldierCount += 1;
+      $scope.gameData.resources -= 10;
     }
 
     gc.showSoldierButton = function() {
-      return (gc.soldierCount > 0 || gc.resources >= 10);
+      return ($scope.gameData.soldierCount > 0 || $scope.gameData.resources >= 10);
     }
 
     gc.disableSoldierButton = function() {
-      return (gc.resources < 10);
+      return ($scope.gameData.resources < 10);
     }
 
     function handleAndCheckDeath() {
@@ -39,13 +43,28 @@ angular.module("spaceRace", [])
         overkillAmount = gc.currentTarget.health * -1
         gc.currentTarget = new Enemy();
         gc.currentTarget.health -= overkillAmount;
-        gc.resources += 10;
-        gc.villagesDestroyed += 1;
+        $scope.gameData.resources += 10;
+        $scope.gameData.villagesDestroyed += 1;
         handleAndCheckDeath(); // In case overkillAmount is >= new targetHealth
       }
     }
 
+    function autoSave() {
+      $cookieStore.put('version', versionNumber);
+      $cookieStore.put('gameData', $scope.gameData);
+    }
+
     var timer = $interval(function () {
-      gc.shootBullets(gc.soldierCount);
+      gc.shootBullets($scope.gameData.soldierCount);
+
+      autoSave();
     }, 1000, 0);
+
+    var init = function() {
+      if($cookieStore.get('version') === versionNumber) {
+        $scope.gameData = $cookieStore.get('gameData');
+      }
+    }
+
+    init();
 }]);
