@@ -5,7 +5,7 @@
   <h1> Village Crusher </h1>
 
   <button ng-click="gc.shootBullets(1)">Shoot a bullet!</button>
-  Enemy Village Health: {{gc.currentTargetHealth}}
+  {{gc.currentTarget.name}} Health: {{gc.currentTarget.health}}
   <br><br>
   Resources: {{gc.resources}}
   <br>
@@ -15,12 +15,11 @@
   <br>
   Villages destroyed: {{gc.villagesDestroyed}}
 
-  <div data="recruitSoldier" ng-show="gc.soldierCount > 0 || gc.resources >= 10">
-    <button ng-click="gc.recruitSoldier()" ng-disabled="gc.resources < 10">
+  <div data="recruitSoldier" ng-show="gc.showSoldierButton()">
+    <button ng-click="gc.recruitSoldier()" ng-disabled="gc.disableSoldierButton()">
       Recruit a soldier! (10 resources)
     </button>
   </div>
-
 
 </body>
 </html>
