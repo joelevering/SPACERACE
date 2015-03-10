@@ -52,10 +52,29 @@ angular.module("spaceRace", ['ngCookies'])
     function autoSave() {
       $cookieStore.put('version', versionNumber);
       $cookieStore.put('gameData', $scope.gameData);
+      $cookieStore.put('timestampSeconds', secondsSinceEpoch());
+    }
+
+    function secondsSinceEpoch() {
+      return new Date() / 1000;
+    }
+
+    function secondsSinceLastLogin() {
+      var lastLoginTimestamp = $cookieStore.get('timestampSeconds');
+
+      if (lastLoginTimestamp) {
+        return Math.round( secondsSinceEpoch() - lastLoginTimestamp );
+      } else {
+        return 1;
+      }
+    }
+
+    function updateGameData(secondsPassed) {
+      gc.shootBullets($scope.gameData.soldierCount * secondsPassed);
     }
 
     var timer = $interval(function () {
-      gc.shootBullets($scope.gameData.soldierCount);
+      updateGameData(1);
 
       autoSave();
     }, 1000, 0);
@@ -63,6 +82,8 @@ angular.module("spaceRace", ['ngCookies'])
     var init = function() {
       if($cookieStore.get('version') === versionNumber) {
         $scope.gameData = $cookieStore.get('gameData');
+
+        updateGameData(secondsSinceLastLogin());
       }
     }
 
